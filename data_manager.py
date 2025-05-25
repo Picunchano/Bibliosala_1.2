@@ -22,32 +22,104 @@ def inicializar_datos_ejemplo():
 
         datos_ejemplo = [
             {
-                'TimestampReserva': (base_datetime_obj.replace(second=1, microsecond=100000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                'RUTAlumno': '20123450-7', 
-                'NombreAlumno': 'Jose Miguel', 
-                'IDSala': 'Sala A01', 
-                'FechaSolicitud': '21/05/2025', 
-                'HoraInicio': '11:00', 
-                'HoraFin': '12:00'
-            },
-            {
-                'TimestampReserva': (base_datetime_obj.replace(second=2, microsecond=200000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                'RUTAlumno': '20123450-8', 
-                'NombreAlumno': 'Olga Maria', 
-                'IDSala': 'Sala A02', 
-                'FechaSolicitud': '22/05/2025', 
-                'HoraInicio': '13:00', 
-                'HoraFin': '14:00'
-            },
-            {
-                'TimestampReserva': (base_datetime_obj.replace(second=3, microsecond=300000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
-                'RUTAlumno': '20123450-9', 
-                'NombreAlumno': 'Juan Perez', 
-                'IDSala': 'Sala A01', 
-                'FechaSolicitud': '22/05/2025', 
-                'HoraInicio': '10:30', 
-                'HoraFin': '11:30'
-            }
+        'TimestampReserva': (base_datetime_obj.replace(second=1, microsecond=100000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20123450-7',
+        'NombreAlumno': 'Jose Miguel',
+        'IDSala': 'Sala A01',
+        'FechaSolicitud': '21/05/2025',
+        'HoraInicio': '11:00',
+        'HoraFin': '12:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=2, microsecond=200000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20123450-8',
+        'NombreAlumno': 'Olga Maria',
+        'IDSala': 'Sala A02',
+        'FechaSolicitud': '22/05/2025',
+        'HoraInicio': '13:00',
+        'HoraFin': '14:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=3, microsecond=300000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20123450-9',
+        'NombreAlumno': 'Juan Perez',
+        'IDSala': 'Sala A01',
+        'FechaSolicitud': '22/05/2025',
+        'HoraInicio': '10:30',
+        'HoraFin': '11:30'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=4, microsecond=150000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '21098765-4',
+        'NombreAlumno': 'Ana Fuentes',
+        'IDSala': 'Sala A05',
+        'FechaSolicitud': '05/04/2025',
+        'HoraInicio': '09:00',
+        'HoraFin': '10:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=5, microsecond=250000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '19876543-2',
+        'NombreAlumno': 'Carlos Gómez',
+        'IDSala': 'Sala A10',
+        'FechaSolicitud': '10/04/2025',
+        'HoraInicio': '14:00',
+        'HoraFin': '15:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=6, microsecond=350000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '22345678-9',
+        'NombreAlumno': 'Laura Torres',
+        'IDSala': 'Sala A03',
+        'FechaSolicitud': '15/04/2025',
+        'HoraInicio': '16:00',
+        'HoraFin': '17:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=7, microsecond=450000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20567890-1',
+        'NombreAlumno': 'Diego Rojas',
+        'IDSala': 'Sala A07',
+        'FechaSolicitud': '01/05/2025',
+        'HoraInicio': '10:00',
+        'HoraFin': '11:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=8, microsecond=550000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '18765432-0',
+        'NombreAlumno': 'Sofia Vidal',
+        'IDSala': 'Sala A12',
+        'FechaSolicitud': '07/05/2025',
+        'HoraInicio': '11:30',
+        'HoraFin': '12:30'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=9, microsecond=650000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '21234567-8',
+        'NombreAlumno': 'Fernando Soto',
+        'IDSala': 'Sala A09',
+        'FechaSolicitud': '12/05/2025',
+        'HoraInicio': '08:30',
+        'HoraFin': '09:30'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=10, microsecond=750000)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20345678-5',
+        'NombreAlumno': 'Valentina Pino',
+        'IDSala': 'Sala A14',
+        'FechaSolicitud': '19/05/2025',
+        'HoraInicio': '15:00',
+        'HoraFin': '16:00'
+    },
+    {
+        'TimestampReserva': (base_datetime_obj.replace(second=11)).strftime('%Y-%m-%d %H:%M:%S.%f'),
+        'RUTAlumno': '20123450-7',
+        'NombreAlumno': 'Jose Miguel',
+        'IDSala': 'Sala A03',
+        'FechaSolicitud': '22/05/2025',
+        'HoraInicio': '15:00',
+        'HoraFin': '16:00'
+    }
         ]
         
         try:
