@@ -12,17 +12,11 @@ import analysis
 SALAS_DISPONIBLES = ["Sala A01", "Sala A02", "Sala A03", "Sala A04", "Sala A05", "Sala A06", "Sala A07", "Sala A08", "Sala A09", "Sala A10", "Sala A11", "Sala A12", "Sala A13", "Sala A14"]
 
 class App:
-    # ... (el resto de tu clase App __init__ y otros métodos permanecen igual) ...
-    # PEGAR AQUÍ __init__ y todos los demás métodos de la clase App
-    # que ya tienes y que te he proporcionado en respuestas anteriores.
-    # Solo mostraré el método modificado poblar_treeview_reservas
-    # y los métodos que lo rodean para dar contexto.
-
     def __init__(self, root_window):
         inicializar_datos_ejemplo()
         self.root = root_window
         self.root.title("Sistema de Reserva de Salas")
-        self.root.geometry("400x250")
+        self.root.geometry("400x300")
 
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.pack(expand=True, fill=tk.BOTH)
@@ -31,18 +25,23 @@ class App:
         title_label.pack(pady=10)
 
         btn_nueva_reserva = ttk.Button(main_frame, text="Realizar Nueva Reserva", command=self.abrir_ventana_nueva_reserva)
-        btn_nueva_reserva.pack(pady=10, fill=tk.X)
+        btn_nueva_reserva.pack(pady=8, fill=tk.X)
 
-        btn_ver_reservas = ttk.Button(main_frame, text="Ver Reservas Existentes", command=self.abrir_ventana_ver_reservas)
-        btn_ver_reservas.pack(pady=10, fill=tk.X)
+        btn_historial_reservas = ttk.Button(main_frame, text="Historial de Reservas", command=self.abrir_ventana_historial_reservas)
+        btn_historial_reservas.pack(pady=8, fill=tk.X)
+
+        # Botón modificado para "Reservas Activas"
+        btn_activas_reservas = ttk.Button(main_frame, text="Reservas Activas", command=self.abrir_ventana_reservas_activas)
+        btn_activas_reservas.pack(pady=8, fill=tk.X)
 
         btn_analizar_datos = ttk.Button(main_frame, text="Analizar Datos", command=self.abrir_ventana_analisis)
-        btn_analizar_datos.pack(pady=10, fill=tk.X)
+        btn_analizar_datos.pack(pady=8, fill=tk.X)
 
         self.ventana_ver_reservas_actual = None
         self.ventana_reserva = None
         self.ventana_analisis_actual = None
 
+    # --- Métodos de Análisis (sin cambios) ---
     def abrir_ventana_analisis(self):
         if self.ventana_analisis_actual and self.ventana_analisis_actual.winfo_exists():
             self.ventana_analisis_actual.lift()
@@ -50,8 +49,8 @@ class App:
 
         self.ventana_analisis_actual = tk.Toplevel(self.root)
         self.ventana_analisis_actual.title("Análisis de Datos de Reservas")
-        self.ventana_analisis_actual.geometry("650x550") 
-        self.ventana_analisis_actual.resizable(True, True) 
+        self.ventana_analisis_actual.geometry("650x550")
+        self.ventana_analisis_actual.resizable(True, True)
         self.ventana_analisis_actual.grab_set()
         self.ventana_analisis_actual.transient(self.root)
         self.ventana_analisis_actual.protocol("WM_DELETE_WINDOW", self._cerrar_ventana_analisis)
@@ -170,10 +169,10 @@ class App:
             if mes_int is not None:
                 if dia_int is not None: display_str = f"Fecha: {dia_int:02d}/{mes_int:02d}/{anio_int}"
                 else: display_str = f"Mes: {mes_int:02d}/{anio_int}"
-            else: 
-                if dia_int is not None: 
+            else:
+                if dia_int is not None:
                     display_str = f"Año: {anio_int} (Día ignorado sin Mes)"
-                    dia_int = None 
+                    dia_int = None
                 else: display_str = f"Año: {anio_int}"
         elif mes_int is not None or dia_int is not None:
              display_str = "Filtro de fecha incompleto (Se requiere al menos el Año)"
@@ -241,10 +240,8 @@ class App:
         else:
             texto = f"Horarios más activos ({display_str}): Sin actividad o datos suficientes para este criterio."
         self.label_resultado_horarios.config(text=texto)
-    
-    def accion_placeholder(self):
-        messagebox.showinfo("En Desarrollo", "Esta funcionalidad aún no ha sido implementada.")
-        
+
+    # --- Métodos de Reserva (sin cambios en nueva reserva) ---
     def abrir_ventana_nueva_reserva(self):
         if self.ventana_reserva and self.ventana_reserva.winfo_exists():
             self.ventana_reserva.lift()
@@ -253,7 +250,7 @@ class App:
         self.ventana_reserva.title("Nueva Reserva")
         self.ventana_reserva.geometry("400x380")
         self.ventana_reserva.resizable(False, False)
-        self.ventana_reserva.grab_set() 
+        self.ventana_reserva.grab_set()
         self.ventana_reserva.transient(self.root)
         self.ventana_reserva.protocol("WM_DELETE_WINDOW", self._cerrar_ventana_nueva_reserva)
         form_frame = ttk.Frame(self.ventana_reserva, padding="15")
@@ -268,7 +265,7 @@ class App:
         ttk.Label(form_frame, text="Sala a Reservar:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
         self.entries['IDSala'] = tk.StringVar(form_frame)
         if SALAS_DISPONIBLES:
-            self.entries['IDSala'].set(SALAS_DISPONIBLES[0]) 
+            self.entries['IDSala'].set(SALAS_DISPONIBLES[0])
             sala_option_menu = ttk.OptionMenu(form_frame, self.entries['IDSala'], SALAS_DISPONIBLES[0], *SALAS_DISPONIBLES)
             sala_option_menu.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
         else:
@@ -308,7 +305,7 @@ class App:
         if campos_faltantes:
             messagebox.showwarning("Campos Incompletos", f"Por favor, complete los siguientes campos: {', '.join(campos_faltantes)}",parent=self.ventana_reserva)
             return
-        if guardar_reserva(datos_reserva):
+        if guardar_reserva(datos_reserva): # Aquí se podría añadir la validación de disponibilidad
             messagebox.showinfo("Reserva Exitosa", "La reserva ha sido guardada correctamente.", parent=self.ventana_reserva)
             for key, widget_or_var in self.entries.items():
                 if isinstance(widget_or_var, tk.StringVar):
@@ -320,112 +317,265 @@ class App:
         ahora = datetime.datetime.now()
         fecha_actual = ahora.strftime("%d/%m/%Y")
         hora_inicio_actual = ahora.strftime("%H:%M")
+        # Por defecto, la reserva actual durará 1 hora.
         hora_fin_calculada = (ahora + datetime.timedelta(hours=1)).strftime("%H:%M")
         self.entries['FechaSolicitud'].delete(0, tk.END); self.entries['FechaSolicitud'].insert(0, fecha_actual)
         self.entries['HoraInicio'].delete(0, tk.END); self.entries['HoraInicio'].insert(0, hora_inicio_actual)
         self.entries['HoraFin'].delete(0, tk.END); self.entries['HoraFin'].insert(0, hora_fin_calculada)
 
-    def abrir_ventana_ver_reservas(self):
+    # --- Métodos para Ver/Gestionar Reservas (MODIFICADOS) ---
+    def _abrir_ventana_base_ver_reservas(self, titulo_ventana: str, filtrar_activas: bool): # Parámetro renombrado conceptualmente
+        """
+        Método base para abrir la ventana de visualización de reservas.
+        Reutiliza la ventana si ya existe.
+        'filtrar_activas' es True para la vista de "Reservas Activas".
+        """
         if self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
+            self.ventana_ver_reservas_actual.title(titulo_ventana)
             self.ventana_ver_reservas_actual.lift()
-            return
-        self.ventana_ver_reservas_actual = tk.Toplevel(self.root)
-        self.ventana_ver_reservas_actual.title("Reservas Existentes")
-        self.ventana_ver_reservas_actual.geometry("800x400") 
-        self.ventana_ver_reservas_actual.grab_set()
-        self.ventana_ver_reservas_actual.transient(self.root)
-        self.ventana_ver_reservas_actual.protocol("WM_DELETE_WINDOW", self._cerrar_ventana_ver_reservas)
-        tree_frame = ttk.Frame(self.ventana_ver_reservas_actual, padding="10")
-        tree_frame.pack(expand=True, fill=tk.BOTH)
-        column_ids = ("rut_alumno", "nombre_alumno", "sala", "fecha", "hora_inicio", "hora_fin")
-        column_headings = ("RUT Alumno", "Nombre Alumno", "Sala", "Fecha", "Hora Inicio", "Hora Fin")
-        self.tree_reservas = ttk.Treeview(tree_frame, columns=column_ids, show='headings', selectmode='extended')
-        for i, col_id in enumerate(column_ids):
-            self.tree_reservas.heading(col_id, text=column_headings[i])
-            width = 150 if col_id == "nombre_alumno" else 120 
-            anchor = tk.W if col_id == "nombre_alumno" else tk.CENTER
-            self.tree_reservas.column(col_id, width=width, anchor=anchor, minwidth=60)
-        scrollbar = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree_reservas.yview)
-        self.tree_reservas.configure(yscroll=scrollbar.set)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.tree_reservas.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-        buttons_frame = ttk.Frame(self.ventana_ver_reservas_actual, padding="10")
-        buttons_frame.pack(fill=tk.X)
-        btn_actualizar = ttk.Button(buttons_frame, text="Actualizar Lista", command=self.poblar_treeview_reservas)
-        btn_actualizar.pack(side=tk.LEFT, padx=5)
-        btn_eliminar_seleccion = ttk.Button(buttons_frame, text="Eliminar Seleccionadas", command=self.eliminar_reservas_seleccionadas_action)
-        btn_eliminar_seleccion.pack(side=tk.LEFT, padx=5)
-        btn_cerrar = ttk.Button(buttons_frame, text="Cerrar", command=self._cerrar_ventana_ver_reservas)
-        btn_cerrar.pack(side=tk.RIGHT, padx=5) 
-        self.poblar_treeview_reservas() # <-- Llamada original
+        else:
+            self.ventana_ver_reservas_actual = tk.Toplevel(self.root)
+            self.ventana_ver_reservas_actual.title(titulo_ventana)
+            self.ventana_ver_reservas_actual.geometry("800x400")
+            self.ventana_ver_reservas_actual.grab_set()
+            self.ventana_ver_reservas_actual.transient(self.root)
+            self.ventana_ver_reservas_actual.protocol("WM_DELETE_WINDOW", self._cerrar_ventana_ver_reservas)
+
+            tree_frame = ttk.Frame(self.ventana_ver_reservas_actual, padding="10")
+            tree_frame.pack(expand=True, fill=tk.BOTH)
+
+            column_ids = ("rut_alumno", "nombre_alumno", "sala", "fecha", "hora_inicio", "hora_fin")
+            column_headings = ("RUT Alumno", "Nombre Alumno", "Sala", "Fecha", "Hora Inicio", "Hora Fin")
+            self.tree_reservas = ttk.Treeview(tree_frame, columns=column_ids, show='headings', selectmode='extended')
+
+            for i, col_id in enumerate(column_ids):
+                self.tree_reservas.heading(col_id, text=column_headings[i])
+                width = 150 if col_id == "nombre_alumno" else 120
+                anchor = tk.W if col_id == "nombre_alumno" else tk.CENTER
+                self.tree_reservas.column(col_id, width=width, anchor=anchor, minwidth=60)
+
+            scrollbar = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree_reservas.yview)
+            self.tree_reservas.configure(yscroll=scrollbar.set)
+            scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            self.tree_reservas.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+
+            buttons_frame = ttk.Frame(self.ventana_ver_reservas_actual, padding="10")
+            buttons_frame.pack(fill=tk.X)
+
+            btn_actualizar = ttk.Button(buttons_frame, text="Actualizar Lista",
+                                        command=lambda fa=filtrar_activas: self.poblar_treeview_reservas(filtrar_activas=fa))
+            btn_actualizar.pack(side=tk.LEFT, padx=5)
+
+            btn_eliminar_seleccion = ttk.Button(buttons_frame, text="Eliminar Seleccionadas", command=self.eliminar_reservas_seleccionadas_action)
+            btn_eliminar_seleccion.pack(side=tk.LEFT, padx=5)
+            btn_cerrar = ttk.Button(buttons_frame, text="Cerrar", command=self._cerrar_ventana_ver_reservas)
+            btn_cerrar.pack(side=tk.RIGHT, padx=5)
+
+        self.poblar_treeview_reservas(filtrar_activas=filtrar_activas)
+
+    def abrir_ventana_historial_reservas(self):
+        self._abrir_ventana_base_ver_reservas("Historial de Reservas", filtrar_activas=False)
+
+    def abrir_ventana_reservas_activas(self): # Método renombrado para claridad
+        """Abre la ventana para ver solo las reservas ACTIVAS."""
+        self._abrir_ventana_base_ver_reservas("Reservas Activas", filtrar_activas=True)
 
     def _cerrar_ventana_ver_reservas(self):
         if self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
             self.ventana_ver_reservas_actual.grab_release()
             self.ventana_ver_reservas_actual.destroy()
             self.ventana_ver_reservas_actual = None
+            self.tree_reservas = None
 
-    def poblar_treeview_reservas(self):
-        if not hasattr(self, 'tree_reservas') or not self.tree_reservas.winfo_exists():
+    def poblar_treeview_reservas(self, filtrar_activas: bool = False): # Parámetro renombrado conceptualmente
+        if not hasattr(self, 'tree_reservas') or not self.tree_reservas or not self.tree_reservas.winfo_exists():
             return
 
         for item in self.tree_reservas.get_children():
             self.tree_reservas.delete(item)
 
-        reservas_data = cargar_reservas() 
+        reservas_data = cargar_reservas()
+        reservas_a_mostrar = []
+        ahora = datetime.datetime.now() # Obtener la hora actual una vez
 
-        # --- INICIO DE MODIFICACIÓN PARA ORDENAR ---
+        if filtrar_activas:
+            for reserva in reservas_data:
+                fecha_reserva_str = reserva.get('FechaSolicitud')
+                hora_inicio_str = reserva.get('HoraInicio')
+                hora_fin_str = reserva.get('HoraFin')
+
+                if not fecha_reserva_str or not hora_inicio_str or not hora_fin_str:
+                    # print(f"Advertencia: Datos incompletos de fecha/hora en reserva {reserva.get('TimestampReserva')}, se omitirá.")
+                    continue # Omitir si falta algún dato esencial
+
+                try:
+                    fecha_obj = datetime.datetime.strptime(fecha_reserva_str, "%d/%m/%Y").date()
+                    
+                    hora_inicio_obj = datetime.datetime.strptime(hora_inicio_str, "%H:%M").time()
+                    reserva_dt_inicio = datetime.datetime.combine(fecha_obj, hora_inicio_obj)
+                    
+                    hora_fin_obj = datetime.datetime.strptime(hora_fin_str, "%H:%M").time()
+                    reserva_dt_fin = datetime.datetime.combine(fecha_obj, hora_fin_obj)
+
+                    # Lógica para reserva activa: inicio <= ahora < fin
+                    if reserva_dt_inicio <= ahora < reserva_dt_fin:
+                        reservas_a_mostrar.append(reserva)
+                except ValueError:
+                    # print(f"Advertencia: Formato de fecha/hora inválido en reserva {reserva.get('TimestampReserva')}, se omitirá del filtro de activas.")
+                    continue
+            
+            if not reservas_a_mostrar and self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
+                 messagebox.showinfo("Información",
+                                    "No hay reservas activas en este momento.",
+                                    parent=self.ventana_ver_reservas_actual)
+                 return
+        else: # Mostrar todas (Historial)
+            reservas_a_mostrar = list(reservas_data)
+
         def sort_key_fecha_solicitud(reserva):
             fecha_str = reserva.get('FechaSolicitud')
-            hora_str = reserva.get('HoraInicio', '00:00') # Criterio secundario opcional
+            hora_str = reserva.get('HoraInicio', '00:00')
             try:
-                # Intentar parsear con fecha y hora para un orden más granular si las fechas son iguales
                 return datetime.datetime.strptime(f"{fecha_str} {hora_str}", "%d/%m/%Y %H:%M")
             except (ValueError, TypeError):
                 try:
-                    # Fallback a solo fecha si la hora es inválida o no importa
                     return datetime.datetime.strptime(fecha_str, "%d/%m/%Y")
                 except (ValueError, TypeError):
-                    # Si la fecha también es inválida o falta, poner al final (o al principio con datetime.min)
-                    return datetime.datetime.max # Las fechas inválidas/faltantes irán al final
+                    return datetime.datetime.max
 
-        if reservas_data: # Solo ordenar si hay datos
-            reservas_data.sort(key=sort_key_fecha_solicitud)
-        # --- FIN DE MODIFICACIÓN PARA ORDENAR ---
+        if reservas_a_mostrar:
+            # Para activas, ordenar por hora de inicio (las más antiguas activas primero)
+            # Para historial, el orden actual (más antiguas primero) también está bien.
+            reservas_a_mostrar.sort(key=sort_key_fecha_solicitud, reverse=False)
 
-        if not reservas_data:
+
+        if not reservas_a_mostrar and not filtrar_activas:
             if self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
-                 messagebox.showinfo("Información", 
-                                    "No hay reservas registradas.",
+                 messagebox.showinfo("Información",
+                                    "No hay reservas registradas en el historial.",
                                     parent=self.ventana_ver_reservas_actual)
         else:
-            for reserva in reservas_data: # Iterar sobre la lista ahora ordenada
-                timestamp_id = reserva.get('TimestampReserva') 
+            for reserva in reservas_a_mostrar:
+                timestamp_id = reserva.get('TimestampReserva')
                 valores_visibles = (
-                    reserva.get('RUTAlumno', ''), 
+                    reserva.get('RUTAlumno', ''),
                     reserva.get('NombreAlumno', ''),
                     reserva.get('IDSala', ''),
                     reserva.get('FechaSolicitud', ''),
                     reserva.get('HoraInicio', ''),
                     reserva.get('HoraFin', '')
                 )
-                if timestamp_id: 
+                if timestamp_id:
                     self.tree_reservas.insert('', tk.END, iid=timestamp_id, values=valores_visibles)
-                else: # Fallback si no hay timestamp_id, aunque no debería ocurrir
+                else:
                     self.tree_reservas.insert('', tk.END, values=valores_visibles)
 
     def eliminar_reservas_seleccionadas_action(self):
-        if not hasattr(self, 'tree_reservas') or not self.tree_reservas.winfo_exists(): return
-        selected_iids = self.tree_reservas.selection() 
+        if not hasattr(self, 'tree_reservas') or not self.tree_reservas or not self.tree_reservas.winfo_exists(): return
+        selected_iids = self.tree_reservas.selection()
         if not selected_iids:
             messagebox.showwarning("Sin Selección", "Por favor, seleccione una o más reservas para eliminar.", parent=self.ventana_ver_reservas_actual)
             return
+
         confirmacion = messagebox.askyesno("Confirmar Eliminación",f"¿Está seguro de que desea eliminar {len(selected_iids)} reserva(s) seleccionada(s)?\nEsta acción no se puede deshacer.",parent=self.ventana_ver_reservas_actual)
         if confirmacion:
             if eliminar_reservas_por_timestamps(list(selected_iids)):
                 messagebox.showinfo("Eliminación Exitosa", "Las reservas seleccionadas han sido eliminadas.", parent=self.ventana_ver_reservas_actual)
             else: messagebox.showerror("Error de Eliminación", "Ocurrió un error al intentar eliminar las reservas. Revise la consola.", parent=self.ventana_ver_reservas_actual)
-            self.poblar_treeview_reservas()
+
+            tipo_vista_filtrada_activas = False
+            if self.ventana_ver_reservas_actual and "Activas" in self.ventana_ver_reservas_actual.title():
+                tipo_vista_filtrada_activas = True
+            self.poblar_treeview_reservas(filtrar_activas=tipo_vista_filtrada_activas)
+        
+# En app.py, dentro de la clase App
+
+    def poblar_treeview_reservas(self, filtrar_activas: bool = False):
+        if not hasattr(self, 'tree_reservas') or not self.tree_reservas or not self.tree_reservas.winfo_exists():
+            return
+
+        for item in self.tree_reservas.get_children():
+            self.tree_reservas.delete(item)
+
+        reservas_data = cargar_reservas()
+        reservas_a_mostrar = []
+        ahora = datetime.datetime.now() # Obtener la hora actual una vez
+
+        if filtrar_activas:
+            for reserva in reservas_data:
+                fecha_reserva_str = reserva.get('FechaSolicitud')
+                hora_inicio_str = reserva.get('HoraInicio')
+                hora_fin_str = reserva.get('HoraFin')
+
+                if not fecha_reserva_str or not hora_inicio_str or not hora_fin_str:
+                    continue
+
+                try:
+                    fecha_obj = datetime.datetime.strptime(fecha_reserva_str, "%d/%m/%Y").date()
+                    hora_inicio_obj = datetime.datetime.strptime(hora_inicio_str, "%H:%M").time()
+                    reserva_dt_inicio = datetime.datetime.combine(fecha_obj, hora_inicio_obj)
+                    hora_fin_obj = datetime.datetime.strptime(hora_fin_str, "%H:%M").time()
+                    reserva_dt_fin = datetime.datetime.combine(fecha_obj, hora_fin_obj)
+
+                    if reserva_dt_inicio <= ahora < reserva_dt_fin:
+                        reservas_a_mostrar.append(reserva)
+                except ValueError:
+                    continue
+            
+            if not reservas_a_mostrar and self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
+                 messagebox.showinfo("Información",
+                                    "No hay reservas activas en este momento.",
+                                    parent=self.ventana_ver_reservas_actual)
+                 # No retornamos aquí para que la campana suene igualmente, indicando que la actualización se completó.
+        else: # Mostrar todas (Historial)
+            reservas_a_mostrar = list(reservas_data)
+
+        def sort_key_fecha_solicitud(reserva):
+            fecha_str = reserva.get('FechaSolicitud')
+            hora_str = reserva.get('HoraInicio', '00:00')
+            try:
+                return datetime.datetime.strptime(f"{fecha_str} {hora_str}", "%d/%m/%Y %H:%M")
+            except (ValueError, TypeError):
+                try:
+                    return datetime.datetime.strptime(fecha_str, "%d/%m/%Y")
+                except (ValueError, TypeError):
+                    return datetime.datetime.max
+
+        if reservas_a_mostrar:
+            reservas_a_mostrar.sort(key=sort_key_fecha_solicitud, reverse=False)
+
+        # Poblar el treeview
+        if reservas_a_mostrar:
+            for reserva in reservas_a_mostrar:
+                timestamp_id = reserva.get('TimestampReserva')
+                valores_visibles = (
+                    reserva.get('RUTAlumno', ''),
+                    reserva.get('NombreAlumno', ''),
+                    reserva.get('IDSala', ''),
+                    reserva.get('FechaSolicitud', ''),
+                    reserva.get('HoraInicio', ''),
+                    reserva.get('HoraFin', '')
+                )
+                if timestamp_id:
+                    self.tree_reservas.insert('', tk.END, iid=timestamp_id, values=valores_visibles)
+                else:
+                    self.tree_reservas.insert('', tk.END, values=valores_visibles)
+        elif not filtrar_activas: # Es historial y está vacío después de todo
+            if self.ventana_ver_reservas_actual and self.ventana_ver_reservas_actual.winfo_exists():
+                 messagebox.showinfo("Información",
+                                    "No hay reservas registradas en el historial.",
+                                    parent=self.ventana_ver_reservas_actual)
+        
+        
+        # Al final de la función, después de que todas las operaciones de actualización
+        # (limpiar, cargar, filtrar, poblar Treeview, o mostrar messageboxes de info)
+        # se hayan completado. Esto indica que la acción de "actualizar" del usuario ha terminado.
+        if hasattr(self, 'root') and self.root.winfo_exists() and \
+           hasattr(self, 'ventana_ver_reservas_actual') and \
+           self.ventana_ver_reservas_actual and \
+           self.ventana_ver_reservas_actual.winfo_exists():
+            # Solo sonar si la ventana donde se actualiza la lista está activa y la raíz existe.
+            self.root.bell()
 
 if __name__ == "__main__":
     root = tk.Tk()
